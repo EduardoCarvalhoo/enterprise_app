@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/beige"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
-    <View
-        android:id="@+id/main_view"
-        android:layout_width="0dp"
-        android:layout_height="22dp"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/main_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/custom_black_23"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,17 +18,16 @@
 
     <ImageView
         android:id="@+id/main_logo_image_view"
-        android:layout_width="184dp"
-        android:layout_height="44dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="88dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="88dp"
         android:contentDescription="@string/main_ioasys_logo_text"
+        android:src="@drawable/logo_home"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_view"
-        app:srcCompat="@drawable/logo_home"
-        tools:ignore="ImageContrastCheck" />
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar" />
 
     <TextView
         android:id="@+id/main_welcome_text_view"
@@ -61,24 +60,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_welcome_text_view" />
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/main_email_field_edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
+        android:layout_marginHorizontal="44dp"
         android:layout_marginTop="60dp"
-        android:layout_marginEnd="44dp"
-        android:autofillHints="username"
-        android:hint="@string/main_email_text"
         android:inputType="textEmailAddress"
-        android:paddingHorizontal="25dp"
-        android:text="@string/main_email_text"
-        android:textColor="@color/charcoal_grey_50"
-        android:textSize="16sp"
+        android:paddingHorizontal="8dp"
+        android:textColorHint="@color/charcoal_grey_50"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_description_text_view"
-        tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
+        app:layout_constraintTop_toBottomOf="@+id/main_description_text_view">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:hint="@string/main_email_text"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/slater_grey"
+            android:textSize="16sp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <View
         android:id="@+id/main_image_email_view"
@@ -91,8 +94,8 @@
 
     <TextView
         android:id="@+id/main_email_error_alert_text_view"
-        android:layout_width="13dp"
-        android:layout_height="13dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:layout_marginTop="64dp"
         android:background="@drawable/ic_baseline_brightness_1_24"
         android:gravity="center"
@@ -104,23 +107,29 @@
         app:layout_constraintEnd_toEndOf="@+id/main_email_field_edit_text"
         app:layout_constraintTop_toBottomOf="@+id/main_description_text_view" />
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/main_access_digits_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginEnd="44dp"
-        android:importantForAutofill="no"
-        android:inputType="text"
-        android:paddingHorizontal="25dp"
-        android:text="@string/main_password_text"
-        android:textColor="@color/charcoal_grey_50"
-        android:textSize="16sp"
+        android:layout_marginHorizontal="44dp"
+        android:paddingHorizontal="8dp"
+        android:textColorHint="@color/charcoal_grey_50"
+        app:hintTextColor="@color/charcoal_grey_50"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_email_field_edit_text"
-        tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/black_54">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:hint="@string/main_password_text"
+            android:inputType="textPassword"
+            android:textColor="@color/gunmetal"
+            android:textSize="16sp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <View
         android:id="@+id/main_padlock_picture_view"
@@ -162,56 +171,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_access_digits_text" />
 
-    <View
-        android:id="@+id/main_enter_button_view"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/main_enter_button"
         android:layout_width="0dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="44dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="44dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="44dp"
         android:background="@color/greeny_blue"
+        android:text="@string/main_enter_the_app_text"
+        android:textColor="@color/white"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_error_message_text_view" />
 
-    <TextView
-        android:id="@+id/main_enter_the_app_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/main_enter_the_app_text"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/main_enter_button_view"
-        app:layout_constraintEnd_toEndOf="@+id/main_enter_button_view"
-        app:layout_constraintStart_toStartOf="@+id/main_enter_button_view"
-        app:layout_constraintTop_toTopOf="@+id/main_enter_button_view"
-        tools:ignore="TextContrastCheck" />
-
-    <ImageButton
-        android:id="@+id/main_visibility_image_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_baseline_visibility_24"
-        android:backgroundTint="@color/charcoal_grey_50"
-        android:contentDescription="@string/main_visibility_button_text"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/main_access_digits_text"
-        app:layout_constraintEnd_toEndOf="@+id/main_access_digits_text"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/main_padlock_picture_view"
-        app:layout_constraintTop_toBottomOf="@+id/main_email_field_edit_text"
-        tools:ignore="ImageContrastCheck,TouchTargetSizeCheck" />
-
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/main_progress_bar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/main_view" />
+        app:layout_constraintTop_toTopOf="@+id/main_toolbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
