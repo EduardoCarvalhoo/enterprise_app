@@ -7,7 +7,7 @@
     android:background="@color/beige">
 
     <View
-        android:id="@+id/home_company_background_view"
+        android:id="@+id/company_item_background_view"
         android:layout_width="0dp"
         android:layout_height="100dp"
         android:layout_marginStart="20dp"
@@ -20,50 +20,51 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/home_result_image_view"
+        android:id="@+id/company_item_photo_image_view"
         android:layout_width="104dp"
         android:layout_height="80dp"
         android:layout_marginStart="10dp"
-        android:contentDescription="@string/home_company_logo_image_view"
-        app:layout_constraintBottom_toBottomOf="@+id/home_company_background_view"
-        app:layout_constraintStart_toStartOf="@+id/home_company_background_view"
-        app:layout_constraintTop_toTopOf="@+id/home_company_background_view"
+        android:contentDescription="@string/home_company_logo_image_text"
+        app:layout_constraintBottom_toBottomOf="@+id/company_item_background_view"
+        app:layout_constraintStart_toStartOf="@+id/company_item_background_view"
+        app:layout_constraintTop_toTopOf="@+id/company_item_background_view"
         app:srcCompat="@drawable/img_e_1_lista" />
 
     <TextView
-        android:id="@+id/home_company_description_text_view"
-        android:layout_width="wrap_content"
+        android:id="@+id/company_item_name_text_view"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
         android:textColor="@color/dark_indigo"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/home_result_image_view"
-        app:layout_constraintTop_toTopOf="@+id/home_company_background_view"
+        app:layout_constraintEnd_toEndOf="@+id/company_item_background_view"
+        app:layout_constraintStart_toEndOf="@+id/company_item_photo_image_view"
+        app:layout_constraintTop_toTopOf="@+id/company_item_background_view"
         tools:text="Empresa 1" />
 
     <TextView
-        android:id="@+id/home_company_text_view"
+        android:id="@+id/company_item_kind_of_service_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="4dp"
         android:textColor="@color/warm_grey"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/home_result_image_view"
-        app:layout_constraintTop_toBottomOf="@+id/home_company_description_text_view"
+        app:layout_constraintStart_toEndOf="@+id/company_item_photo_image_view"
+        app:layout_constraintTop_toBottomOf="@+id/company_item_name_text_view"
         tools:text="Negócio" />
 
     <TextView
-        android:id="@+id/home_company_location_text_view"
+        android:id="@+id/company_item_location_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="4dp"
         android:textColor="@color/warm_grey"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/home_result_image_view"
-        app:layout_constraintTop_toBottomOf="@+id/home_company_text_view"
+        app:layout_constraintStart_toEndOf="@+id/company_item_photo_image_view"
+        app:layout_constraintTop_toBottomOf="@+id/company_item_kind_of_service_text_view"
         tools:text="Brasil" />
 </androidx.constraintlayout.widget.ConstraintLayout>
