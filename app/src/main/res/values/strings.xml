@@ -17,6 +17,10 @@
     <string name="home_company_logo_image_text">Imagem do logo da empresa</string>
     <string name="home_search_menu_text">Busca</string>
 
+    <!-- company_detail -->
+    <string name="company_details_company_acronym_text">Imagem da sigla da empresa</string>
+    <string name="company_detail_description_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+
     <!-- Business adapter -->
     <string name="business_adapter_base_url_text">https://empresas.ioasys.com.br%1$s</string>
 
