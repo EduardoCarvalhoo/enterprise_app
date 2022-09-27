@@ -1,5 +1,6 @@
 package com.example.appioasys.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,7 +12,13 @@ import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.appioasys.R
+import com.example.appioasys.adapter.BusinessAdapter
 import com.example.appioasys.databinding.ActivityHomeBinding
+import com.example.appioasys.response.CompanyListResponse
+import com.example.appioasys.response.RetrofitConfig
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
@@ -53,8 +60,12 @@ class HomeActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText?.isEmpty() == true) {
-                    binding.homeRecyclerView.isVisible = false
+                if (newText?.isNotEmpty() == true) {
+                    receiveAuthenticationData(newText)
+                } else {
+                    with(binding) {
+                        homeRecyclerView.isVisible = false
+                    }
                 }
                 return false
             }
@@ -82,6 +93,59 @@ class HomeActivity : AppCompatActivity() {
 
                 override fun onClick(v: View?) {}
             })
+        }
+    }
+
+    private fun receiveAuthenticationData(newText: String) {
+        val intent: Intent = intent
+        val token = intent.getStringExtra("access_token")
+        val client = intent.getStringExtra("client")
+        val uid = intent.getStringExtra("uid")
+        requestCompanyData(token, client, uid, newText)
+    }
+
+    private fun requestCompanyData(
+        token: String?,
+        client: String?,
+        uid: String?,
+        typedText: String?
+    ) {
+
+        val companyListService = RetrofitConfig.getRetrofit()
+            .getEnterpriseList(token.toString(), client.toString(), uid.toString(), typedText)
+        val callList: Call<CompanyListResponse> = companyListService
+
+        callList.enqueue(object : Callback<CompanyListResponse> {
+            override fun onResponse(
+                call: Call<CompanyListResponse>,
+                response: Response<CompanyListResponse>
+            ) {
+                handleBusinessDataResponse(response)
+            }
+
+            override fun onFailure(call: Call<CompanyListResponse>, t: Throwable) {
+
+            }
+        })
+    }
+
+    private fun handleBusinessDataResponse(response: Response<CompanyListResponse>) {
+        if (response.isSuccessful && (response.body()?.enterprises?.isNotEmpty() == true)) {
+            binding.homeRecyclerView.isVisible = true
+            binding.homeRecyclerView.adapter = BusinessAdapter(
+                response.body()?.enterprises ?: return
+            ) { companyItemResponse ->
+                val intent = CompanyDetail.getStartIntent(
+                    this@HomeActivity,
+                    companyItemResponse.companyName,
+                    companyItemResponse.photoUrl,
+                    companyItemResponse.companyDescription
+                )
+                startActivity(intent)
+            }
+        }else{
+            binding.homeRecyclerView.isVisible = false
+            binding.homeFieldResearchFailedTextView.isVisible = true
         }
     }
 }
