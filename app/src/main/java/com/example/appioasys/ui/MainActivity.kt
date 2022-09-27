@@ -14,15 +14,19 @@ import com.example.appioasys.R
 import com.example.appioasys.api.LoginRequest
 import com.example.appioasys.databinding.ActivityMainBinding
 import com.example.appioasys.response.RetrofitConfig
+import com.example.appioasys.utils.showAlertDialog
 import okhttp3.Headers
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 import java.net.HttpURLConnection
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var emailText: String
+    private lateinit var password: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +40,8 @@ class MainActivity : AppCompatActivity() {
     private fun validateLogin() {
         with(binding) {
             mainEnterButton.setOnClickListener {
-                val emailText = mainEmailEditText.text.toString()
-                val password = mainPasswordEditText.text.toString()
+                emailText = mainEmailEditText.text.toString()
+                password = mainPasswordEditText.text.toString()
                 if (Patterns.EMAIL_ADDRESS.matcher(emailText).matches() && password.length > 3) {
                     mainProgressBar.isVisible = true
                     toDoLogin(emailText, password)
@@ -75,10 +79,24 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-
+                binding.mainProgressBar.isVisible = false
+                handleLoginDataFailure(t)
             }
         })
     }
+
+    private fun handleLoginDataFailure(throwable: Throwable) {
+        if (throwable is IOException) {
+            showAlertDialog(getString(R.string.no_internet_connection_error_text)) {
+                toDoLogin(emailText, password)
+            }
+        } else {
+            showAlertDialog(getString(R.string.generic_error_text)) {
+                toDoLogin(emailText, password)
+            }
+        }
+    }
+
 
     private fun configureEmailAndPasswordChange() {
         val emailText: EditText = binding.mainEmailEditText

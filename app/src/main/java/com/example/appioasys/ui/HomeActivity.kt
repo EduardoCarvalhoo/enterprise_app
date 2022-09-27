@@ -16,12 +16,19 @@ import com.example.appioasys.adapter.BusinessAdapter
 import com.example.appioasys.databinding.ActivityHomeBinding
 import com.example.appioasys.response.CompanyListResponse
 import com.example.appioasys.response.RetrofitConfig
+import com.example.appioasys.utils.showAlertDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
+    private lateinit var token: String
+    private lateinit var client: String
+    private lateinit var uid: String
+    private lateinit var typedText: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +38,6 @@ class HomeActivity : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.rouge)
         setupToolbar()
         recyclerView()
-
     }
 
     private fun setupToolbar() {
@@ -98,19 +104,15 @@ class HomeActivity : AppCompatActivity() {
 
     private fun receiveAuthenticationData(newText: String) {
         val intent: Intent = intent
-        val token = intent.getStringExtra("access_token")
-        val client = intent.getStringExtra("client")
-        val uid = intent.getStringExtra("uid")
+        typedText = newText
+        token = intent.getStringExtra("access_token").toString()
+        client = intent.getStringExtra("client").toString()
+        uid = intent.getStringExtra("uid").toString()
         requestCompanyData(token, client, uid, newText)
     }
 
-    private fun requestCompanyData(
-        token: String?,
-        client: String?,
-        uid: String?,
-        typedText: String?
+    private fun requestCompanyData(token: String?, client: String?, uid: String?, typedText: String?
     ) {
-
         val companyListService = RetrofitConfig.getRetrofit()
             .getEnterpriseList(token.toString(), client.toString(), uid.toString(), typedText)
         val callList: Call<CompanyListResponse> = companyListService
@@ -124,9 +126,21 @@ class HomeActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<CompanyListResponse>, t: Throwable) {
-
+                handleHomeDataFailure(t)
             }
         })
+    }
+
+    private fun handleHomeDataFailure(throwable: Throwable) {
+        if (throwable is IOException) {
+            showAlertDialog(getString(R.string.no_internet_connection_error_text)) {
+                requestCompanyData(token, client, uid, typedText)
+            }
+        } else {
+            showAlertDialog(getString(R.string.generic_error_text)) {
+                requestCompanyData(token, client, uid, typedText)
+            }
+        }
     }
 
     private fun handleBusinessDataResponse(response: Response<CompanyListResponse>) {

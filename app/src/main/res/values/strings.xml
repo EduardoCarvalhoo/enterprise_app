@@ -24,4 +24,11 @@
     <!-- Business adapter -->
     <string name="business_adapter_base_url_text">https://empresas.ioasys.com.br%1$s</string>
 
+    <!-- Erro dialog messages -->
+    <string name="no_internet_connection_error_text">Sem conexão com a internet. Tente novamente!</string>
+    <string name="server_error_text">Ocorreu um erro em nossos servidores, tente mais tarde!</string>
+    <string name="generic_error_text">Ocorreu um erro, tente mais tarde!</string>
+    <string name="error_dialog_title_text">Erro!</string>
+    <string name="error_dialog_positive_button_message_text">Tentar novamente</string>
+    <string name="error_dialog_negative_button_message_text">Cancelar</string>
 </resources>
