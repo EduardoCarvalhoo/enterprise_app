@@ -2,12 +2,22 @@
     <!-- Main -->
     <string name="app_name">App ioasys</string>
     <string name="main_welcome_text">BEM-VINDO AO EMPRESAS</string>
-    <string name="main_description_text" >Lorem ipsum dolor sit amet, contetur adipiscing elit. Nunc accumsan.</string>
+    <string name="main_description_text">Lorem ipsum dolor sit amet, contetur adipiscing elit. Nunc accumsan.</string>
     <string name="main_email_text">E-mail</string>
     <string name="main_error_message_alert_text">!</string>
     <string name="main_password_text">Senha</string>
     <string name="main_error_message_text">Credenciais informadas são inválidas, tente novamente.</string>
     <string name="main_enter_the_app_text">Entrar</string>
     <string name="main_ioasys_logo_text">Você clicou no logo da empresa ioasys</string>
-    <string name="main_visibility_button_text">Botão visibilidade</string>
+
+    <!-- Home -->
+    <string name="home_user_indication_text">Clique na busca para iniciar.</string>
+    <string name="home_field_search_text">Pesquisar</string>
+    <string name="home_field_research_failed_text">Nenhuma empresa foi encontrada para a busca realizada.</string>
+    <string name="home_company_logo_image_text">Imagem do logo da empresa</string>
+    <string name="home_search_menu_text">Busca</string>
+
+    <!-- Business adapter -->
+    <string name="business_adapter_base_url_text">https://empresas.ioasys.com.br%1$s</string>
+
 </resources>
