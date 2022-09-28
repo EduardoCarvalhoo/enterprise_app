@@ -1,4 +1,4 @@
-package com.example.appioasys.response
+package com.example.appioasys.data.response
 
 import com.google.gson.annotations.SerializedName
 

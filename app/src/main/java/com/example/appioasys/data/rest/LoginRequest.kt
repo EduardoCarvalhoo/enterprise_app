@@ -1,4 +1,4 @@
-package com.example.appioasys.api
+package com.example.appioasys.data.rest
 
 data class LoginRequest(
     var email: String?,

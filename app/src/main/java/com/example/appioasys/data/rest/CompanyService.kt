@@ -1,6 +1,6 @@
-package com.example.appioasys.api
+package com.example.appioasys.data.rest
 
-import com.example.appioasys.response.CompanyListResponse
+import com.example.appioasys.data.response.CompanyListResponse
 import com.example.appioasys.utils.LOGIN_URL
 import okhttp3.ResponseBody
 import retrofit2.Call

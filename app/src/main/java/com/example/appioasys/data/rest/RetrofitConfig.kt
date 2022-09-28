@@ -1,6 +1,5 @@
-package com.example.appioasys.response
+package com.example.appioasys.data.rest
 
-import com.example.appioasys.api.CompanyService
 import com.example.appioasys.utils.BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
