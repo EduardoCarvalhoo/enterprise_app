@@ -11,9 +11,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.example.appioasys.R
-import com.example.appioasys.api.LoginRequest
+import com.example.appioasys.data.rest.LoginRequest
 import com.example.appioasys.databinding.ActivityMainBinding
-import com.example.appioasys.response.RetrofitConfig
+import com.example.appioasys.data.rest.RetrofitConfig
+import com.example.appioasys.utils.CLIENT
+import com.example.appioasys.utils.TOKEN
+import com.example.appioasys.utils.UID
 import com.example.appioasys.utils.showAlertDialog
 import okhttp3.Headers
 import okhttp3.ResponseBody
@@ -63,17 +66,18 @@ class MainActivity : AppCompatActivity() {
                 when {
                     response.isSuccessful -> {
                         val headers: Headers = response.headers()
-                        val token = headers["access-token"]
-                        val client = headers["client"]
-                        val uid = headers["uid"]
+                        val token = headers[TOKEN]
+                        val client = headers[CLIENT]
+                        val uid = headers[UID]
                         navigateToHomeScreen(token, client, uid)
                     }
                     response.code() == HttpURLConnection.HTTP_UNAUTHORIZED -> {
                         Toast.makeText(
                             this@MainActivity,
-                            "Email ou senha inválido!",
+                            getString(R.string.main_login_error_warning_text),
                             Toast.LENGTH_SHORT
                         ).show()
+                        binding.mainProgressBar.isVisible = false
                     }
                 }
             }
@@ -96,7 +100,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
     private fun configureEmailAndPasswordChange() {
         val emailText: EditText = binding.mainEmailEditText
@@ -133,9 +136,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateToHomeScreen(token: String?, client: String?, uid: String?) {
         val intentHome = Intent(this, HomeActivity::class.java)
-        intentHome.putExtra("access_token", token)
-        intentHome.putExtra("client", client)
-        intentHome.putExtra("uid", uid)
+        intentHome.putExtra(TOKEN, token)
+        intentHome.putExtra(CLIENT, client)
+        intentHome.putExtra(UID, uid)
         startActivity(intentHome)
     }
 }

@@ -9,6 +9,7 @@
     <string name="main_error_message_text">Credenciais informadas são inválidas, tente novamente.</string>
     <string name="main_enter_the_app_text">Entrar</string>
     <string name="main_ioasys_logo_text">Você clicou no logo da empresa ioasys</string>
+    <string name="main_login_error_warning_text">"Email ou senha inválido!"</string>
 
     <!-- Home -->
     <string name="home_user_indication_text">Clique na busca para iniciar.</string>
