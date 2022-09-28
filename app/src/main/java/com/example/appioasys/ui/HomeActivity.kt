@@ -13,10 +13,11 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.appioasys.R
 import com.example.appioasys.adapter.BusinessAdapter
+import com.example.appioasys.data.response.CompanyListResponse
+import com.example.appioasys.data.rest.RetrofitConfig
 import com.example.appioasys.databinding.ActivityHomeBinding
-import com.example.appioasys.response.CompanyListResponse
-import com.example.appioasys.response.RetrofitConfig
-import com.example.appioasys.utils.showAlertDialog
+import com.example.appioasys.domain.model.CompanyItemMapped
+import com.example.appioasys.utils.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,7 +29,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var client: String
     private lateinit var uid: String
     private lateinit var typedText: String
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,13 +105,14 @@ class HomeActivity : AppCompatActivity() {
     private fun receiveAuthenticationData(newText: String) {
         val intent: Intent = intent
         typedText = newText
-        token = intent.getStringExtra("access_token").toString()
-        client = intent.getStringExtra("client").toString()
-        uid = intent.getStringExtra("uid").toString()
+        token = intent.getStringExtra(TOKEN).toString()
+        client = intent.getStringExtra(CLIENT).toString()
+        uid = intent.getStringExtra(UID).toString()
         requestCompanyData(token, client, uid, newText)
     }
 
-    private fun requestCompanyData(token: String?, client: String?, uid: String?, typedText: String?
+    private fun requestCompanyData(
+        token: String?, client: String?, uid: String?, typedText: String?
     ) {
         val companyListService = RetrofitConfig.getRetrofit()
             .getEnterpriseList(token.toString(), client.toString(), uid.toString(), typedText)
@@ -122,7 +123,22 @@ class HomeActivity : AppCompatActivity() {
                 call: Call<CompanyListResponse>,
                 response: Response<CompanyListResponse>
             ) {
-                handleBusinessDataResponse(response)
+                with(response) {
+                    if (isSuccessful) {
+                        handleBusinessDataResponse(
+                            body()?.enterprises.toItem()
+                        )
+                    } else {
+                        showAlertDialog(getString(R.string.server_error_text)) {
+                            requestCompanyData(
+                                token,
+                                client,
+                                uid,
+                                typedText
+                            )
+                        }
+                    }
+                }
             }
 
             override fun onFailure(call: Call<CompanyListResponse>, t: Throwable) {
@@ -143,12 +159,10 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleBusinessDataResponse(response: Response<CompanyListResponse>) {
-        if (response.isSuccessful && (response.body()?.enterprises?.isNotEmpty() == true)) {
+    private fun handleBusinessDataResponse(enterprises: List<CompanyItemMapped>?) {
+        if (enterprises?.isNotEmpty() == true) {
             binding.homeRecyclerView.isVisible = true
-            binding.homeRecyclerView.adapter = BusinessAdapter(
-                response.body()?.enterprises ?: return
-            ) { companyItemResponse ->
+            binding.homeRecyclerView.adapter = BusinessAdapter(enterprises) { companyItemResponse ->
                 val intent = CompanyDetail.getStartIntent(
                     this@HomeActivity,
                     companyItemResponse.companyName,
@@ -157,7 +171,7 @@ class HomeActivity : AppCompatActivity() {
                 )
                 startActivity(intent)
             }
-        }else{
+        } else {
             binding.homeRecyclerView.isVisible = false
             binding.homeFieldResearchFailedTextView.isVisible = true
         }

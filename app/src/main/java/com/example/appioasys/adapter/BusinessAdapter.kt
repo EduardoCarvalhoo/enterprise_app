@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.appioasys.R
 import com.example.appioasys.databinding.CompanyItemBinding
-import com.example.appioasys.response.CompanyItemResponse
+import com.example.appioasys.domain.model.CompanyItemMapped
 
 class BusinessAdapter(
-    private var enterprises: List<CompanyItemResponse>,
-    private var onItemClickListener: (item: CompanyItemResponse) -> Unit
+    private var enterprises: List<CompanyItemMapped>,
+    private var onItemClickListener: (item: CompanyItemMapped) -> Unit
 ) : RecyclerView.Adapter<BusinessAdapter.ListBusinessViewHolder>() {
 
 
@@ -27,7 +27,7 @@ class BusinessAdapter(
 
     class ListBusinessViewHolder(
         binding: CompanyItemBinding,
-        private val onItemClickListener: (item: CompanyItemResponse) -> Unit
+        private val onItemClickListener: (item: CompanyItemMapped) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
         private val logo = binding.companyItemPhotoImageView
@@ -35,7 +35,7 @@ class BusinessAdapter(
         private val kindOfService = binding.companyItemKindOfServiceTextView
         private val location = binding.companyItemLocationTextView
 
-        fun bindView(item: CompanyItemResponse) {
+        fun bindView(item: CompanyItemMapped) {
             Glide.with(this@ListBusinessViewHolder.itemView).load(
                 itemView.context.getString(
                     R.string.business_adapter_base_url_text,
@@ -44,7 +44,7 @@ class BusinessAdapter(
             )
                 .into(logo)
             name.text = item.companyName
-            kindOfService.text = item.kindOfService.enterprise_type_name
+            kindOfService.text = item.kindOfService
             location.text = item.companyCity
 
             itemView.setOnClickListener {
