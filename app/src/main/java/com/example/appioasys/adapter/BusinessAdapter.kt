@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.appioasys.R
 import com.example.appioasys.databinding.CompanyItemBinding
 import com.example.appioasys.domain.model.CompanyItemMapped
+import com.example.appioasys.utils.BASE_IMAGE_URL
 
 class BusinessAdapter(
     private var enterprises: List<CompanyItemMapped>,
@@ -37,12 +37,8 @@ class BusinessAdapter(
 
         fun bindView(item: CompanyItemMapped) {
             Glide.with(this@ListBusinessViewHolder.itemView).load(
-                itemView.context.getString(
-                    R.string.business_adapter_base_url_text,
-                    item.photoUrl
-                )
-            )
-                .into(logo)
+                BASE_IMAGE_URL.plus(item.photoUrl)
+            ).into(logo)
             name.text = item.companyName
             kindOfService.text = item.kindOfService
             location.text = item.companyCity
