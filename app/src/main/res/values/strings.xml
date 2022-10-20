@@ -1,29 +1,27 @@
 <resources>
-    <!-- Main -->
+    <!-- Login -->
     <string name="app_name">App ioasys</string>
-    <string name="main_welcome_text">BEM-VINDO AO EMPRESAS</string>
+    <string name="main_welcome_text">BEM-VINDO AO\n EMPRESAS</string>
     <string name="main_description_text">Lorem ipsum dolor sit amet, contetur adipiscing elit. Nunc accumsan.</string>
-    <string name="main_email_text">E-mail</string>
-    <string name="main_error_message_alert_text">!</string>
-    <string name="main_password_text">Senha</string>
-    <string name="main_error_message_text">Credenciais informadas são inválidas, tente novamente.</string>
-    <string name="main_enter_the_app_text">Entrar</string>
-    <string name="main_ioasys_logo_text">Você clicou no logo da empresa ioasys</string>
-    <string name="main_login_error_warning_text">"Email ou senha inválido!"</string>
+    <string name="login_email_hint">E-mail</string>
+    <string name="login_password_hint">Senha</string>
+    <string name="login_invalid_error_message">Credenciais informadas são inválidas, tente novamente.</string>
+    <string name="login_enter_the_app_button">Entrar</string>
+    <string name="login_empty_field_error_message">Campo vazio</string>
+    <string name="login_invalid_email_error_message">Email com formato inválido</string>
+    <string name="login_invalid_password_error_message">Senha inválida</string>
+    <string name="login_logo_content_description">logo da ioasys</string>
 
     <!-- Home -->
     <string name="home_user_indication_text">Clique na busca para iniciar.</string>
-    <string name="home_field_search_text">Pesquisar</string>
+    <string name="home_field_search_hint">Pesquisar</string>
     <string name="home_field_research_failed_text">Nenhuma empresa foi encontrada para a busca realizada.</string>
     <string name="home_company_logo_image_text">Imagem do logo da empresa</string>
     <string name="home_search_menu_text">Busca</string>
 
     <!-- company_detail -->
-    <string name="company_details_company_acronym_text">Imagem da sigla da empresa</string>
+    <string name="company_details_company_image_view">Imagem da empresa</string>
     <string name="company_detail_description_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
-
-    <!-- Business adapter -->
-    <string name="business_adapter_base_url_text">https://empresas.ioasys.com.br%1$s</string>
 
     <!-- Erro dialog messages -->
     <string name="no_internet_connection_error_text">Sem conexão com a internet. Tente novamente!</string>

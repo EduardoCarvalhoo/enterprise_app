@@ -1,14 +1,11 @@
 package com.example.appioasys.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
-import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.appioasys.R
@@ -24,15 +21,16 @@ import retrofit2.Response
 import java.io.IOException
 
 class HomeActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityHomeBinding
-    private lateinit var token: String
-    private lateinit var client: String
-    private lateinit var uid: String
-    private lateinit var typedText: String
+    private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
+    private val token: String
+        get() = intent.getStringExtra(TOKEN).toString()
+    private val client: String
+        get() = intent.getStringExtra(CLIENT).toString()
+    private val uid: String
+        get() = intent.getStringExtra(UID).toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         window.statusBarColor = ContextCompat.getColor(this, R.color.rouge)
@@ -49,7 +47,10 @@ class HomeActivity : AppCompatActivity() {
         with(binding.homeRecyclerView) {
             setHasFixedSize(true)
             layoutManager =
-                LinearLayoutManager(this@HomeActivity, LinearLayoutManager.VERTICAL, false)
+                LinearLayoutManager(
+                    this@HomeActivity, LinearLayoutManager.VERTICAL,
+                    false
+                )
         }
     }
 
@@ -59,7 +60,7 @@ class HomeActivity : AppCompatActivity() {
         val searchView = searchItem.actionView as SearchView
         configureMenuOptions(searchView)
 
-        searchView.queryHint = getString(R.string.home_field_search_text)
+        searchView.queryHint = getString(R.string.home_field_search_hint)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
@@ -67,11 +68,9 @@ class HomeActivity : AppCompatActivity() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText?.isNotEmpty() == true) {
-                    receiveAuthenticationData(newText)
+                    requestCompanyData(newText)
                 } else {
-                    with(binding) {
-                        homeRecyclerView.isVisible = false
-                    }
+                    binding.homeRecyclerView.isVisible = false
                 }
                 return false
             }
@@ -80,42 +79,24 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun configureMenuOptions(searchView: SearchView) {
-        if (searchView.isNotEmpty()) {
-            searchView.setOnSearchClickListener {
+        searchView.setOnSearchClickListener {
+            with(binding) {
+                homeUserIndicationTextView.isVisible = !homeUserIndicationTextView.isVisible
+            }
+            searchView.setOnCloseListener {
                 with(binding) {
+                    homeFieldResearchFailedTextView.isVisible = false
+                    homeRecyclerView.isVisible = false
                     homeUserIndicationTextView.isVisible = !homeUserIndicationTextView.isVisible
                 }
+                false
             }
-            searchView.setOnCloseListener(object : View.OnClickListener,
-                SearchView.OnCloseListener {
-                override fun onClose(): Boolean {
-                    with(binding) {
-                        binding.homeFieldResearchFailedTextView.isVisible = false
-                        binding.homeRecyclerView.isVisible = false
-                        homeUserIndicationTextView.isVisible = !homeUserIndicationTextView.isVisible
-                    }
-                    return false
-                }
-
-                override fun onClick(v: View?) {}
-            })
         }
     }
 
-    private fun receiveAuthenticationData(newText: String) {
-        val intent: Intent = intent
-        typedText = newText
-        token = intent.getStringExtra(TOKEN).toString()
-        client = intent.getStringExtra(CLIENT).toString()
-        uid = intent.getStringExtra(UID).toString()
-        requestCompanyData(token, client, uid, newText)
-    }
-
-    private fun requestCompanyData(
-        token: String?, client: String?, uid: String?, typedText: String?
-    ) {
+    private fun requestCompanyData(newText: String?) {
         val companyListService = RetrofitConfig.getRetrofit()
-            .getEnterpriseList(token.toString(), client.toString(), uid.toString(), typedText)
+            .getEnterpriseList(token, client, uid, newText)
         val callList: Call<CompanyListResponse> = companyListService
 
         callList.enqueue(object : Callback<CompanyListResponse> {
@@ -130,31 +111,26 @@ class HomeActivity : AppCompatActivity() {
                         )
                     } else {
                         showAlertDialog(getString(R.string.server_error_text)) {
-                            requestCompanyData(
-                                token,
-                                client,
-                                uid,
-                                typedText
-                            )
+                            requestCompanyData(newText)
                         }
                     }
                 }
             }
 
             override fun onFailure(call: Call<CompanyListResponse>, t: Throwable) {
-                handleHomeDataFailure(t)
+                handleHomeDataFailure(t, newText)
             }
         })
     }
 
-    private fun handleHomeDataFailure(throwable: Throwable) {
+    private fun handleHomeDataFailure(throwable: Throwable, newText: String?) {
         if (throwable is IOException) {
             showAlertDialog(getString(R.string.no_internet_connection_error_text)) {
-                requestCompanyData(token, client, uid, typedText)
+                requestCompanyData(newText)
             }
         } else {
             showAlertDialog(getString(R.string.generic_error_text)) {
-                requestCompanyData(token, client, uid, typedText)
+                requestCompanyData(newText)
             }
         }
     }
@@ -172,8 +148,10 @@ class HomeActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         } else {
-            binding.homeRecyclerView.isVisible = false
-            binding.homeFieldResearchFailedTextView.isVisible = true
+            with(binding){
+                homeRecyclerView.isVisible = false
+                homeFieldResearchFailedTextView.isVisible = true
+            }
         }
     }
 }
