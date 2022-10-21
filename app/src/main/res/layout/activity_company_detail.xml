@@ -1,50 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".ui.CompanyDetail">
+    tools:context=".ui.CompanyDetailActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/company_details_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/medium_pink"
-        app:titleTextColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/white" />
 
-    <ImageView
-        android:id="@+id/company_details_image_view"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="24dp"
-        android:contentDescription="@string/company_details_company_image_view"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/company_details_toolbar"
-        app:srcCompat="@drawable/company_image" />
+        app:layout_constraintTop_toBottomOf="@+id/company_details_toolbar">
 
-    <TextView
-        android:id="@+id/company_details_description_text_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="20dp"
-        android:textSize="16sp"
-        android:textColor="@color/warm_grey"
-        android:text="@string/company_detail_description_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/company_details_image_view" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/company_details_image_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:contentDescription="@string/company_details_company_image_view"
+                app:layout_constraintEnd_toStartOf="@+id/company_guideline_right_side"
+                app:layout_constraintStart_toStartOf="@+id/company_guideline_left_side"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ImageContrastCheck"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/company_details_description_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/company_detail_description_text"
+                android:textColor="@color/warm_grey"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="@+id/company_guideline_right_side"
+                app:layout_constraintStart_toStartOf="@+id/company_guideline_left_side"
+                app:layout_constraintTop_toBottomOf="@+id/company_details_image_view"
+                tools:ignore="TextContrastCheck" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/company_guideline_right_side"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="24dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/company_guideline_left_side"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="24dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+
+
+
+
+
+
+
