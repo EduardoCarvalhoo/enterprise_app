@@ -15,7 +15,7 @@
         android:theme="@style/Theme.AppIoasys"
         tools:targetApi="31">
         <activity
-            android:name=".ui.CompanyDetail"
+            android:name=".ui.CompanyDetailActivity"
             android:parentActivityName=".ui.HomeActivity"
             android:exported="false" />
         <activity

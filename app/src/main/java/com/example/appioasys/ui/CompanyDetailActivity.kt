@@ -8,11 +8,12 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.appioasys.R
 import com.example.appioasys.databinding.ActivityCompanyDetailBinding
+import com.example.appioasys.domain.model.CompanyItem
 import com.example.appioasys.utils.BASE_IMAGE_URL
 
-class CompanyDetail : AppCompatActivity() {
+class CompanyDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCompanyDetailBinding.inflate(layoutInflater) }
-    private val url by lazy { intent.getStringExtra(URL) }
+    private val companyItem by lazy { intent.getSerializableExtra(COMPANY_ITEM_EXTRA) as CompanyItem? }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,35 +27,30 @@ class CompanyDetail : AppCompatActivity() {
         setSupportActionBar(binding.companyDetailsToolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            title = null
             setHomeAsUpIndicator(R.drawable.ic_arrow_back)
+            title = companyItem?.name.orEmpty()
         }
     }
 
     private fun setData() {
         with(binding) {
-            companyDetailsToolbar.title = intent.getStringExtra(NAME)
-            companyDetailsDescriptionTextView.text = intent.getStringExtra(DESCRIPTION)
-            Glide.with(this@CompanyDetail).load(BASE_IMAGE_URL.plus(url))
-                .into(companyDetailsImageView)
+            companyDetailsDescriptionTextView.text = companyItem?.description.orEmpty()
+            companyItem?.photoUrl?.let {
+                Glide.with(this@CompanyDetailActivity).load(BASE_IMAGE_URL.plus(it))
+                    .into(companyDetailsImageView)
+            }
         }
     }
 
     companion object {
-        const val NAME = "name"
-        const val URL = "photoURl"
-        const val DESCRIPTION = "description"
+        private const val COMPANY_ITEM_EXTRA = "COMPANY_ITEM_EXTRA"
 
         fun getStartIntent(
             context: Context,
-            companyName: String?,
-            photoUrl: String?,
-            companyDescription: String?
+            companyItem: CompanyItem
         ): Intent {
-            return Intent(context, CompanyDetail::class.java).apply {
-                putExtra(NAME, companyName)
-                putExtra(URL, photoUrl)
-                putExtra(DESCRIPTION, companyDescription)
+            return Intent(context, CompanyDetailActivity::class.java).apply {
+                putExtra(COMPANY_ITEM_EXTRA, companyItem)
             }
         }
     }

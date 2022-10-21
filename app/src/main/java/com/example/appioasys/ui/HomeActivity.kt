@@ -7,14 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.appioasys.R
-import com.example.appioasys.adapter.BusinessAdapter
 import com.example.appioasys.data.response.CompanyListResponse
 import com.example.appioasys.data.rest.RetrofitConfig
 import com.example.appioasys.databinding.ActivityHomeBinding
-import com.example.appioasys.domain.model.CompanyItemMapped
-import com.example.appioasys.utils.*
+import com.example.appioasys.domain.model.CompanyItem
+import com.example.appioasys.domain.model.toItem
+import com.example.appioasys.ui.adapter.CompaniesAdapter
+import com.example.appioasys.utils.CLIENT
+import com.example.appioasys.utils.TOKEN
+import com.example.appioasys.utils.UID
+import com.example.appioasys.utils.showAlertDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,44 +25,36 @@ import java.io.IOException
 
 class HomeActivity : AppCompatActivity() {
     private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
-    private val token: String
-        get() = intent.getStringExtra(TOKEN).toString()
-    private val client: String
-        get() = intent.getStringExtra(CLIENT).toString()
-    private val uid: String
-        get() = intent.getStringExtra(UID).toString()
+    private val token by lazy { intent.getStringExtra(TOKEN) }
+    private val client by lazy { intent.getStringExtra(CLIENT) }
+    private val uid by lazy { intent.getStringExtra(UID) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
+        if (!validateScreenArgs()) return
         window.statusBarColor = ContextCompat.getColor(this, R.color.rouge)
         setupToolbar()
-        recyclerView()
     }
+
+    private fun validateScreenArgs() =
+        if (token.isNullOrBlank() || client.isNullOrBlank() || uid.isNullOrBlank()) {
+            showAlertDialog(getString(R.string.generic_error_text))
+            false
+        } else {
+            true
+        }
 
     private fun setupToolbar() {
         setSupportActionBar(binding.homeToolbar)
-        supportActionBar?.title = null
-    }
-
-    private fun recyclerView() {
-        with(binding.homeRecyclerView) {
-            setHasFixedSize(true)
-            layoutManager =
-                LinearLayoutManager(
-                    this@HomeActivity, LinearLayoutManager.VERTICAL,
-                    false
-                )
-        }
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.options_menu, menu)
         val searchItem: MenuItem = menu.findItem(R.id.menu_action_search)
         val searchView = searchItem.actionView as SearchView
-        configureMenuOptions(searchView)
-
+        setupSearchViewClickListeners(searchView)
         searchView.queryHint = getString(R.string.home_field_search_hint)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -67,7 +62,7 @@ class HomeActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText?.isNotEmpty() == true) {
+                if (newText?.isNotBlank() == true) {
                     requestCompanyData(newText)
                 } else {
                     binding.homeRecyclerView.isVisible = false
@@ -78,25 +73,22 @@ class HomeActivity : AppCompatActivity() {
         return true
     }
 
-    private fun configureMenuOptions(searchView: SearchView) {
+    private fun setupSearchViewClickListeners(searchView: SearchView) {
         searchView.setOnSearchClickListener {
+            binding.homeUserIndicationTextView.isVisible = false
+        }
+        searchView.setOnCloseListener {
             with(binding) {
-                homeUserIndicationTextView.isVisible = !homeUserIndicationTextView.isVisible
+                homeFieldResearchFailedTextView.isVisible = false
+                homeUserIndicationTextView.isVisible = true
             }
-            searchView.setOnCloseListener {
-                with(binding) {
-                    homeFieldResearchFailedTextView.isVisible = false
-                    homeRecyclerView.isVisible = false
-                    homeUserIndicationTextView.isVisible = !homeUserIndicationTextView.isVisible
-                }
-                false
-            }
+            false
         }
     }
 
-    private fun requestCompanyData(newText: String?) {
+    private fun requestCompanyData(newText: String) {
         val companyListService = RetrofitConfig.getRetrofit()
-            .getEnterpriseList(token, client, uid, newText)
+            .getEnterpriseList(token.orEmpty(), client.orEmpty(), uid.orEmpty(), newText)
         val callList: Call<CompanyListResponse> = companyListService
 
         callList.enqueue(object : Callback<CompanyListResponse> {
@@ -106,9 +98,7 @@ class HomeActivity : AppCompatActivity() {
             ) {
                 with(response) {
                     if (isSuccessful) {
-                        handleBusinessDataResponse(
-                            body()?.enterprises.toItem()
-                        )
+                        handleBusinessDataResponse(body()?.companies.toItem())
                     } else {
                         showAlertDialog(getString(R.string.server_error_text)) {
                             requestCompanyData(newText)
@@ -123,7 +113,7 @@ class HomeActivity : AppCompatActivity() {
         })
     }
 
-    private fun handleHomeDataFailure(throwable: Throwable, newText: String?) {
+    private fun handleHomeDataFailure(throwable: Throwable, newText: String) {
         if (throwable is IOException) {
             showAlertDialog(getString(R.string.no_internet_connection_error_text)) {
                 requestCompanyData(newText)
@@ -135,20 +125,18 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleBusinessDataResponse(enterprises: List<CompanyItemMapped>?) {
-        if (enterprises?.isNotEmpty() == true) {
-            binding.homeRecyclerView.isVisible = true
-            binding.homeRecyclerView.adapter = BusinessAdapter(enterprises) { companyItemResponse ->
-                val intent = CompanyDetail.getStartIntent(
-                    this@HomeActivity,
-                    companyItemResponse.companyName,
-                    companyItemResponse.photoUrl,
-                    companyItemResponse.companyDescription
-                )
-                startActivity(intent)
-            }
-        } else {
-            with(binding){
+    private fun handleBusinessDataResponse(enterprises: List<CompanyItem>?) {
+        with(binding) {
+            if (enterprises?.isNotEmpty() == true) {
+                homeRecyclerView.isVisible = true
+                homeRecyclerView.adapter = CompaniesAdapter(enterprises) { companyItem ->
+                    val intent = CompanyDetailActivity.getStartIntent(
+                        this@HomeActivity,
+                        companyItem
+                    )
+                    startActivity(intent)
+                }
+            } else {
                 homeRecyclerView.isVisible = false
                 homeFieldResearchFailedTextView.isVisible = true
             }
