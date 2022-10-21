@@ -13,9 +13,9 @@ interface CompanyService {
 
     @GET("enterprises")
     fun getEnterpriseList(
-        @Header("access-token") accessToken: String?,
-        @Header("client") client: String?,
-        @Header("uid") uid: String?,
-        @Query("name") name: String?
+        @Header("access-token") accessToken: String,
+        @Header("client") client: String,
+        @Header("uid") uid: String,
+        @Query("name") name: String
     ): Call<CompanyListResponse>
 }
