@@ -1,3 +1,8 @@
 package com.example.appioasys.data.response
 
-data class CompanyListResponse(val enterprises: List<CompanyItemResponse>)
+import com.google.gson.annotations.SerializedName
+
+data class CompanyListResponse(
+    @SerializedName("enterprises")
+    val companies: List<CompanyItemResponse>
+)

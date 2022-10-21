@@ -3,13 +3,13 @@ import com.google.gson.annotations.SerializedName
 
 data class CompanyItemResponse(
     @SerializedName("enterprise_name")
-    val companyName: String?,
+    val name: String?,
     @SerializedName("photo")
     val photoUrl: String?,
     @SerializedName("description")
-    val companyDescription: String?,
+    val description: String?,
     @SerializedName("city")
-    val companyCity: String?,
+    val city: String?,
     @SerializedName("enterprise_type")
-    val kindOfService: CompanyServiceResponse
+    val companyServiceResponse: CompanyServiceResponse?
 )
