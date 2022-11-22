@@ -1,4 +1,4 @@
-package com.example.appioasys.ui.adapter
+package com.example.appioasys.presentation.ui.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,6 +12,7 @@ class CompaniesAdapter(
     private val enterprises: List<CompanyItem>,
     private val onItemClickListener: (item: CompanyItem) -> Unit
 ) : RecyclerView.Adapter<CompaniesAdapter.CompaniesViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CompaniesViewHolder {
         val view = ItemCompanyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CompaniesViewHolder(view, onItemClickListener)

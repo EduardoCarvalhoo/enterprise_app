@@ -1,11 +1,13 @@
 package com.example.appioasys.domain.model
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-class CompanyItem(
+@Parcelize
+data class CompanyItem(
     val name: String?,
     val photoUrl: String?,
     val description: String?,
     val city: String?,
     val serviceType: String?
-) : Serializable
+): Parcelable

@@ -1,7 +1,7 @@
 package com.example.appioasys.data.response
 import com.google.gson.annotations.SerializedName
 
-data class CompanyItemResponse(
+data class HomeItemResponse(
     @SerializedName("enterprise_name")
     val name: String?,
     @SerializedName("photo")
@@ -13,3 +13,4 @@ data class CompanyItemResponse(
     @SerializedName("enterprise_type")
     val companyServiceResponse: CompanyServiceResponse?
 )
+

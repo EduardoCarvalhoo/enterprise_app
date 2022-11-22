@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import com.example.appioasys.R
 
-fun Activity.showAlertDialog(message: String, positiveButtonAction: (() -> Unit)? = null){
+fun Activity.showAlertDialog(message: Int, positiveButtonAction: (() -> Unit)? = null){
     AlertDialog.Builder(this)
         .setTitle(getString(R.string.error_dialog_title_text))
         .setMessage(message)

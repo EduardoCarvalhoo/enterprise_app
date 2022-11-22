@@ -1,4 +1,4 @@
-package com.example.appioasys.data.rest
+package com.example.appioasys.data.response
 
 data class LoginRequest(
     val email: String?,

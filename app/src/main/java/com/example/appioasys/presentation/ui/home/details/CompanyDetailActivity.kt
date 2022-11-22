@@ -1,35 +1,27 @@
-package com.example.appioasys.ui
+package com.example.appioasys.presentation.ui.home.details
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.appioasys.R
 import com.example.appioasys.databinding.ActivityCompanyDetailBinding
 import com.example.appioasys.domain.model.CompanyItem
+import com.example.appioasys.presentation.base.BaseActivity
 import com.example.appioasys.utils.BASE_IMAGE_URL
 
-class CompanyDetailActivity : AppCompatActivity() {
+class CompanyDetailActivity : BaseActivity() {
     private val binding by lazy { ActivityCompanyDetailBinding.inflate(layoutInflater) }
-    private val companyItem by lazy { intent.getSerializableExtra(COMPANY_ITEM_EXTRA) as CompanyItem? }
+    private val companyItem by lazy { intent.getParcelableExtra(COMPANY_ITEM_EXTRA) as CompanyItem? }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         window.statusBarColor = ContextCompat.getColor(this, R.color.rouge)
-        configureToolbar()
+        setupToolbar(binding.companyDetailsToolbar, companyItem?.name, R.drawable.ic_arrow_back,
+            true)
         setData()
-    }
-
-    private fun configureToolbar() {
-        setSupportActionBar(binding.companyDetailsToolbar)
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-            title = companyItem?.name.orEmpty()
-        }
     }
 
     private fun setData() {

@@ -1,8 +1,8 @@
 package com.example.appioasys.domain.model
 
-import com.example.appioasys.data.response.CompanyItemResponse
+import com.example.appioasys.data.response.HomeItemResponse
 
-fun List<CompanyItemResponse>?.toItem(): List<CompanyItem>? = this?.map { companyItemResponse ->
+fun List<HomeItemResponse>?.toItem(): List<CompanyItem>? = this?.map { companyItemResponse ->
     CompanyItem(
         companyItemResponse.name,
         companyItemResponse.photoUrl,

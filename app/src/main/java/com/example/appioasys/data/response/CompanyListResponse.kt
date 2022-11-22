@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class CompanyListResponse(
     @SerializedName("enterprises")
-    val companies: List<CompanyItemResponse>
+    val companies: List<HomeItemResponse>
 )
