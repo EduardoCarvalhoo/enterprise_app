@@ -3,7 +3,7 @@ package com.example.appioasys.data.repository
 import com.example.appioasys.data.response.HomeListResult
 import com.example.appioasys.data.response.LoginAuthenticationUser
 
-interface HomeRepository {
+interface CompanyListRepository {
     fun getCompanyList(
         authenticationUser: LoginAuthenticationUser,
         newText: String?,

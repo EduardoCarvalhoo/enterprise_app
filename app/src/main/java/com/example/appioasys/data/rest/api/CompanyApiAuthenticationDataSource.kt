@@ -2,9 +2,12 @@ package com.example.appioasys.data.rest.api
 
 import com.example.appioasys.data.repository.LoginRepository
 import com.example.appioasys.data.response.LoginAuthenticationUser
-import com.example.appioasys.data.response.LoginResult
 import com.example.appioasys.data.response.LoginRequest
+import com.example.appioasys.data.response.LoginResult
 import com.example.appioasys.data.rest.retrofit.RetrofitConfig
+import com.example.appioasys.domain.model.NoInternetException
+import com.example.appioasys.domain.model.ServerException
+import com.example.appioasys.domain.model.UnauthorizedException
 import com.example.appioasys.domain.model.User
 import com.example.appioasys.utils.CLIENT
 import com.example.appioasys.utils.TOKEN
@@ -14,6 +17,8 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
+import java.net.HttpURLConnection
 
 class CompanyApiAuthenticationDataSource : LoginRepository {
 
@@ -37,12 +42,21 @@ class CompanyApiAuthenticationDataSource : LoginRepository {
                         val resultData = LoginAuthenticationUser(token, client, uid)
                         loginResultCallback(LoginResult.Success(resultData))
                     }
-                    else -> loginResultCallback(LoginResult.ApiError(response.code()))
+                    response.code() == HttpURLConnection.HTTP_UNAUTHORIZED -> {
+                        loginResultCallback(LoginResult.Error(UnauthorizedException))
+                    }
+                    else -> {
+                        loginResultCallback(LoginResult.Error(ServerException))
+                    }
                 }
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                loginResultCallback(LoginResult.ServerError(t))
+                loginResultCallback(
+                    LoginResult.Error(
+                        if (t is IOException) NoInternetException else ServerException
+                    )
+                )
             }
         })
     }

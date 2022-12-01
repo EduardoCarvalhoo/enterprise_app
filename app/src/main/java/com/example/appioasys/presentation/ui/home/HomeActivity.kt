@@ -17,14 +17,16 @@ import com.example.appioasys.domain.model.CompanyItem
 import com.example.appioasys.presentation.ui.home.adapter.CompaniesAdapter
 import com.example.appioasys.presentation.ui.home.details.CompanyDetailActivity
 import com.example.appioasys.utils.showAlertDialog
+import com.example.appioasys.utils.showErrorAlertDialog
 
 class HomeActivity : AppCompatActivity() {
     private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
     private val viewModel by lazy {
-        HomeViewModel.HomeViewModelFactory(CompanyListApiDataSource()).create(HomeViewModel::class.java)
+        HomeViewModel.HomeViewModelFactory(CompanyListApiDataSource())
+            .create(HomeViewModel::class.java)
     }
     private val authenticationData by lazy {
-        intent.getSerializableExtra(COMPANY_ITEM_EXTRA) as LoginAuthenticationUser
+        intent.getSerializableExtra(AUTHENTICATION_DATA_EXTRA) as LoginAuthenticationUser
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,9 +56,8 @@ class HomeActivity : AppCompatActivity() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText?.isNotBlank() == true) {
-                    viewModel.getCompanyList(
-                        authenticationData, newText
-                    )
+                    binding.homeProgressBar.isVisible = true
+                    viewModel.getCompanyList(authenticationData, newText)
                 } else {
                     binding.homeRecyclerView.isVisible = false
                 }
@@ -80,19 +81,21 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupObserver() {
-        viewModel.companyErrorLiveData.observe(this) {
-            it?.let { liveErrorData ->
-                showAlertDialog(liveErrorData)
-            }
+        viewModel.serverErrorLiveData.observe(this) { errorMessageResId ->
+            binding.homeProgressBar.isVisible = false
+            showAlertDialog(errorMessageResId){}
         }
-        viewModel.companyListLiveData.observe(this) {
-            it?.let { companyItems ->
-                setupRecyclerView(companyItems)
-            }
+        viewModel.actionToHandleErrorLiveData.observe(this){ actionToHandleError ->
+            showErrorAlertDialog(actionToHandleError){finish()}
         }
-        viewModel.companyLiveDataContent.observe(this) {
+        viewModel.companyListLiveData.observe(this) { companyItems ->
+            binding.homeProgressBar.isVisible = false
+            setupRecyclerView(companyItems)
+        }
+        viewModel.isEmptyCompanyListLiveData.observe(this) { isEmpty ->
             with(binding) {
-                if (it == false) {
+                homeProgressBar.isVisible = false
+                if (isEmpty == false) {
                     homeRecyclerView.isVisible = false
                     homeFieldResearchFailedTextView.isVisible = true
                 } else {
@@ -113,14 +116,14 @@ class HomeActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val COMPANY_ITEM_EXTRA = "COMPANY_ITEM_EXTRA"
+        private const val AUTHENTICATION_DATA_EXTRA = "AUTHENTICATION_DATA_EXTRA"
 
         fun getStartIntent(
             context: Context,
             authenticationData: LoginAuthenticationUser,
         ): Intent {
             return Intent(context, HomeActivity::class.java).apply {
-                putExtra(COMPANY_ITEM_EXTRA, authenticationData)
+                putExtra(AUTHENTICATION_DATA_EXTRA, authenticationData)
             }
         }
     }

@@ -26,8 +26,11 @@
     <!-- Erro dialog messages -->
     <string name="no_internet_connection_error_text">Sem conexão com a internet. Tente novamente!</string>
     <string name="server_error_text">Ocorreu um erro em nossos servidores, tente mais tarde!</string>
+    <string name="unauthorized_user_text">Usuário não autorizado!</string>
     <string name="generic_error_text">Ocorreu um erro, tente mais tarde!</string>
     <string name="error_dialog_title_text">Erro!</string>
     <string name="error_dialog_positive_button_message_text">Tentar novamente</string>
     <string name="error_dialog_negative_button_message_text">Cancelar</string>
+    <string name="error_dialog_back_button_message_text">Voltar</string>
+
 </resources>

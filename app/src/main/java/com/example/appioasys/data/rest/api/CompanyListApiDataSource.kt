@@ -1,16 +1,21 @@
 package com.example.appioasys.data.rest.api
 
-import com.example.appioasys.data.repository.HomeRepository
+import com.example.appioasys.data.repository.CompanyListRepository
 import com.example.appioasys.data.response.CompanyListResponse
 import com.example.appioasys.data.response.HomeListResult
 import com.example.appioasys.data.response.LoginAuthenticationUser
 import com.example.appioasys.data.rest.retrofit.RetrofitConfig
+import com.example.appioasys.domain.model.NoInternetException
+import com.example.appioasys.domain.model.ServerException
+import com.example.appioasys.domain.model.UnauthorizedException
 import com.example.appioasys.domain.model.toItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
+import java.net.HttpURLConnection
 
-class CompanyListApiDataSource : HomeRepository {
+class CompanyListApiDataSource : CompanyListRepository {
 
     override fun getCompanyList(
         authenticationUser: LoginAuthenticationUser,
@@ -32,12 +37,18 @@ class CompanyListApiDataSource : HomeRepository {
                         val companyList = response.body()?.companies.toItem()
                         companyListResultCallback(HomeListResult.Success(companyList))
                     }
-                    else -> companyListResultCallback(HomeListResult.ApiError(response.code()))
+                    response.code() == HttpURLConnection.HTTP_UNAUTHORIZED ->
+                        companyListResultCallback(HomeListResult.Error(UnauthorizedException))
+
+                    else -> companyListResultCallback(HomeListResult.Error(ServerException))
                 }
             }
 
             override fun onFailure(call: Call<CompanyListResponse>, t: Throwable) {
-                companyListResultCallback(HomeListResult.SeverError(t))
+                companyListResultCallback(
+                    HomeListResult.Error(
+                        if (t is IOException) NoInternetException else ServerException)
+                )
             }
         })
     }

@@ -14,7 +14,6 @@ import com.example.appioasys.utils.showAlertDialog
 
 class LoginActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
-    private lateinit var user: User
     private val viewModel by lazy {
         LoginViewModel.LoginViewModelFactory(CompanyApiAuthenticationDataSource())
             .create(LoginViewModel::class.java)
@@ -23,6 +22,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        viewModel.resetLiveData()
         window.statusBarColor = ContextCompat.getColor(this, R.color.custom_black_23)
         setupClickListeners()
         setupObserver()
@@ -33,38 +33,41 @@ class LoginActivity : AppCompatActivity() {
     private fun setupClickListeners() {
         with(binding) {
             loginEnterButton.setOnClickListener {
-                user = User(
-                    email = loginEmailEditText.text.toString(),
-                    password = loginPasswordEditText.text.toString()
+                val user = User(
+                    email = loginEmailEditText.text?.toString().orEmpty(),
+                    password = loginPasswordEditText.text?.toString().orEmpty()
                 )
-                if (viewModel.validateEmail(user) && viewModel.validatePassword(user)) {
-                    viewModel.doLogin(user)
-                    loginProgressBar.isVisible = true
-                } else {
-                    loginEnterButton.isEnabled = false
-                }
+                viewModel.doLogin(user)
             }
         }
     }
 
     private fun setupObserver() {
-        viewModel.loginValidateEmailLiveData.observe(this) {
-            binding.loginEmailFieldTextInputLayout.error = getString(it)
+        viewModel.emailErrorMessageLiveData.observe(this) { errorMessageId ->
+            errorMessageId?.let {
+                binding.loginEmailFieldTextInputLayout.error = getString(it)
+            }
         }
-        viewModel.loginValidatePasswordLiveData.observe(this) {
-            binding.loginPasswordFieldTextInputLayout.error = getString(it)
+        viewModel.passwordErrorMessageLiveData.observe(this) { errorMessageId ->
+            errorMessageId?.let {
+                binding.loginPasswordFieldTextInputLayout.error = getString(errorMessageId)
+            }
         }
         viewModel.loginServerErrorLiveData.observe(this) { codeError ->
             showAlertDialog(codeError)
-            binding.loginProgressBar.isVisible = false
         }
-        viewModel.loginErrorLiveData.observe(this) {
+        viewModel.isLoadingLiveData.observe(this) { isLoading ->
+            binding.loginProgressBar.isVisible = isLoading
+        }
+        viewModel.blockLoginLiveData.observe(this) {
+            binding.loginEnterButton.isEnabled = false
+        }
+        viewModel.showUnauthorizedErrorLiveData.observe(this) {
             with(binding) {
                 loginPasswordFieldTextInputLayout.error =
                     getString(R.string.login_invalid_error_message)
                 loginEmailFieldTextInputLayout.error = EMPTY_ERROR_MESSAGE
                 loginEnterButton.isEnabled = false
-                loginProgressBar.isVisible = false
             }
         }
     }
@@ -83,12 +86,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun navigateToHomeScreen() {
-        viewModel.loginLiveData.observe(this) { authenticationData ->
-            binding.loginProgressBar.isVisible = false
-            val intent = HomeActivity.getStartIntent(
-                this@LoginActivity, authenticationData
-            )
-            startActivity(intent)
+        viewModel.loginSuccessLiveData.observe(this) { authenticationData ->
+            authenticationData?.let {
+                binding.loginProgressBar.isVisible = false
+                val intent = HomeActivity.getStartIntent(
+                    this@LoginActivity, authenticationData
+                )
+                startActivity(intent)
+            }
         }
     }
 
