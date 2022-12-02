@@ -1,4 +1,3 @@
-![1_1_FalhaLogin](https://user-images.githubusercontent.com/102394401/205314828-abc44bc8-d6db-4edc-9ee6-98e16b87a122.png)
 ![1_3_LoginSenhaOculta](https://user-images.githubusercontent.com/102394401/205314832-f6afd0cd-86f4-462c-8298-919c639508d3.png)
 ![3_DetalheEmpresa](https://user-images.githubusercontent.com/102394401/205314835-1222dea5-4cb3-4bab-8510-272abf69a215.png)
 ![2_2_Resultados](https://user-images.githubusercontent.com/102394401/205314838-859d2e02-3cf6-4ec6-8024-7e0ec3e9b654.png)
