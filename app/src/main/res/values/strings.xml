@@ -29,8 +29,7 @@
     <string name="unauthorized_user_text">Usuário não autorizado!</string>
     <string name="generic_error_text">Ocorreu um erro, tente mais tarde!</string>
     <string name="error_dialog_title_text">Erro!</string>
-    <string name="error_dialog_positive_button_message_text">Tentar novamente</string>
-    <string name="error_dialog_negative_button_message_text">Cancelar</string>
+    <string name="error_dialog_positive_button_message_text">OK</string>
     <string name="error_dialog_back_button_message_text">Voltar</string>
 
 </resources>
