@@ -3,7 +3,6 @@ package com.example.appioasys.presentation.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.example.appioasys.R
 import com.example.appioasys.data.repository.CompanyListRepository
 import com.example.appioasys.data.response.HomeListResult
@@ -50,16 +49,6 @@ class HomeViewModel(private val dataSource: CompanyListRepository) : ViewModel()
                     }
                 }
             }
-        }
-    }
-
-    class HomeViewModelFactory(private val dataSource: CompanyListRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-                return HomeViewModel(dataSource) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
 }

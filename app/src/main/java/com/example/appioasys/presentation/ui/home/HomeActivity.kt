@@ -11,20 +11,18 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.example.appioasys.R
 import com.example.appioasys.data.response.LoginAuthenticationUser
-import com.example.appioasys.data.rest.api.CompanyListApiDataSource
 import com.example.appioasys.databinding.ActivityHomeBinding
 import com.example.appioasys.domain.model.CompanyItem
 import com.example.appioasys.presentation.ui.home.adapter.CompaniesAdapter
 import com.example.appioasys.presentation.ui.home.details.CompanyDetailActivity
 import com.example.appioasys.utils.showAlertDialog
 import com.example.appioasys.utils.showErrorAlertDialog
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeActivity : AppCompatActivity() {
     private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
-    private val viewModel by lazy {
-        HomeViewModel.HomeViewModelFactory(CompanyListApiDataSource())
-            .create(HomeViewModel::class.java)
-    }
+    private val viewModel: HomeViewModel by viewModel()
+
     private val authenticationData by lazy {
         intent.getSerializableExtra(AUTHENTICATION_DATA_EXTRA) as LoginAuthenticationUser
     }

@@ -6,18 +6,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.example.appioasys.R
-import com.example.appioasys.data.rest.api.CompanyApiAuthenticationDataSource
 import com.example.appioasys.databinding.ActivityLoginBinding
 import com.example.appioasys.domain.model.User
 import com.example.appioasys.presentation.ui.home.HomeActivity
 import com.example.appioasys.utils.showAlertDialog
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
-    private val viewModel by lazy {
-        LoginViewModel.LoginViewModelFactory(CompanyApiAuthenticationDataSource())
-            .create(LoginViewModel::class.java)
-    }
+    private val viewModel: LoginViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -4,7 +4,7 @@ import com.example.appioasys.data.repository.CompanyListRepository
 import com.example.appioasys.data.response.CompanyListResponse
 import com.example.appioasys.data.response.HomeListResult
 import com.example.appioasys.data.response.LoginAuthenticationUser
-import com.example.appioasys.data.rest.retrofit.RetrofitConfig
+import com.example.appioasys.data.rest.service.HomeService
 import com.example.appioasys.domain.model.NoInternetException
 import com.example.appioasys.domain.model.ServerException
 import com.example.appioasys.domain.model.UnauthorizedException
@@ -15,14 +15,14 @@ import retrofit2.Response
 import java.io.IOException
 import java.net.HttpURLConnection
 
-class CompanyListApiDataSource : CompanyListRepository {
+class CompanyListApiDataSource(private val service: HomeService) : CompanyListRepository {
 
     override fun getCompanyList(
         authenticationUser: LoginAuthenticationUser,
         newText: String?,
         companyListResultCallback: (result: HomeListResult) -> Unit
     ) {
-        val callList: Call<CompanyListResponse> = RetrofitConfig.homeService.getEnterpriseList(
+        val callList = service.getEnterpriseList(
             authenticationUser.token.orEmpty(),
             authenticationUser.client.orEmpty(),
             authenticationUser.uid.orEmpty(),

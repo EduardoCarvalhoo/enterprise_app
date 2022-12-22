@@ -5,7 +5,6 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface HomeService {
-
     @GET("enterprises")
     fun getEnterpriseList(
         @Header("access-token") accessToken: String,

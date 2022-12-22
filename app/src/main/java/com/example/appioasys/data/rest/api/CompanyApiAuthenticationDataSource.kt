@@ -4,7 +4,7 @@ import com.example.appioasys.data.repository.LoginRepository
 import com.example.appioasys.data.response.LoginAuthenticationUser
 import com.example.appioasys.data.response.LoginRequest
 import com.example.appioasys.data.response.LoginResult
-import com.example.appioasys.data.rest.retrofit.RetrofitConfig
+import com.example.appioasys.data.rest.service.LoginService
 import com.example.appioasys.domain.model.NoInternetException
 import com.example.appioasys.domain.model.ServerException
 import com.example.appioasys.domain.model.UnauthorizedException
@@ -20,15 +20,14 @@ import retrofit2.Response
 import java.io.IOException
 import java.net.HttpURLConnection
 
-class CompanyApiAuthenticationDataSource : LoginRepository {
+class CompanyApiAuthenticationDataSource(private val service: LoginService) : LoginRepository {
 
     override fun getAuthenticationData(
         user: User,
         loginResultCallback: (result: LoginResult) -> Unit
     ) {
-        val companyService =
-            RetrofitConfig.loginService.login(LoginRequest(user.email, user.password))
-        companyService.enqueue(object : Callback<ResponseBody> {
+        val company = service.login(LoginRequest(user.email, user.password))
+        company.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(
                 call: Call<ResponseBody>, response: Response<ResponseBody>
             ) {

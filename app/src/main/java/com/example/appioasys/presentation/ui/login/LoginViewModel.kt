@@ -3,7 +3,6 @@ package com.example.appioasys.presentation.ui.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.example.appioasys.R
 import com.example.appioasys.data.repository.LoginRepository
 import com.example.appioasys.data.response.LoginAuthenticationUser
@@ -91,16 +90,6 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
                 passwordErrorMessageMutableLiveData.postValue(R.string.login_empty_field_error_message)
                 false
             }
-        }
-    }
-
-    class LoginViewModelFactory(private val loginRepository: LoginRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-                return LoginViewModel(loginRepository) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
 }
